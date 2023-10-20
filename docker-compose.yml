@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_DB=serverdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '7432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    command: >
+      bash -c "uvicorn main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - '8000:8000'
+
+volumes:
+  pgdata:
+
+
+
